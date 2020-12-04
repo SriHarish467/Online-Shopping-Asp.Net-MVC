@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.RoleViewModel>
+
+@{
+    ViewBag.Title = "DisplayRole";
+}
+
+<h2>DisplayRole</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RoleId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RoleName)
+        </td>
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id=item.RoleId })
+        </td>
+    </tr>
+}
+
+</table>

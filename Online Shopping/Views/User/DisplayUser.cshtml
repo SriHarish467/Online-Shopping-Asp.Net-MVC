@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.UserViewModel>
+
+@{
+    ViewBag.Title = "DisplayUser";
+}
+
+<h2>DisplayUser</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Username)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role.RoleName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditUser", new {  id=item.UserId }) |
+            @Html.ActionLink("Delete", "DeleteUser", new {  id=item.UserId })
+        </td>
+    </tr>
+}
+
+</table>
