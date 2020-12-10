@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Online_Shopping.DomainModel.Product>
+﻿@model IEnumerable<Online_Shopping.ViewModel.ProductViewModel>
 
 @{
     ViewBag.Title = "DisplayProduct";
@@ -6,9 +6,12 @@
 
 <h2>DisplayProduct</h2>
 
-<p>
-    @Html.ActionLink("Create New", "CreateProduct")
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <input type="button" class="btn-primary" value="AddProduct" onclick="location.href='@Url.Action("CreateProduct")'" />
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -20,34 +23,73 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Stock)
-        </th>
+        
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
+                @Html.DisplayNameFor(model => model.Stock)
+                </th>
+            }
+        
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProductName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Stock)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.ProductId }) |
-            @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })|
-            @Html.ActionLink("buy", "AddCart", new { id = item.ProductId }) 
-            @*<a href ="@Url.Action("AddCart", new { id = item.ProductId })" class=" btn btn-success">Buy</a>*@
-        </td>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProductName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Price)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    
+        @if (User.IsInRole("Admin"))
+        {
+           <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+           <td>
+           <input type="button" class="btn-info" value="Edit" onclick="location.href='@Url.Action("EditProduct", new { ProductId = item.ProductId })'"/>
+           <button class="deleteProduct btn-danger" data-id="@item.ProductId">Delete</button>
+            @*@Html.ActionLink("Buy", "AddCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })*@
+            </td>
+         }
+      else
+      { 
+            <td>
+           <a href="@Url.Action("AddCart", "ManageCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })" class=" btn btn-success">AddToCart</a>
+             </td>
+      }
+        
     </tr>
-}
+    }
 
 </table>
+
+<script>
+
+    $(".deleteProduct").click(function () {
+        debugger;
+        var confirmDelete = confirm("Are you sure to remove the selected Product ?");
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/Product/DeleteProduct',
+                data: {
+                    ProductId: $(this).attr('data-id')
+                }
+            })
+                .done(function () {
+                    $(document).ajaxStop(function () {
+                        window.location.reload();
+                    });
+                })
+                .fail(function () {
+                    alert("Failed to remove from cart !");
+                })
+        }
+    });
+
+</script>

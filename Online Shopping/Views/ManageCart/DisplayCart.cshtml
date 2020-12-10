@@ -1,0 +1,203 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.CartViewModel>
+
+@{
+    ViewBag.Title = "DisplayCart";
+    decimal subtotal = 0.000M;
+    decimal totalPrice = 0.000M;
+
+}
+
+    <div>
+        @if (Model == null || Model.Count() == 0)
+        {
+            <h1>No Items in Cart</h1>
+            @Html.ActionLink("Continue Shopping", "DisplayProduct", "Product")
+        }
+
+
+        else
+        {
+            <h2>DisplayCart</h2>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ProductName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TotalPrice)
+                    </th>
+                    <th></th>
+                </tr>
+                @if (Session["Username"] != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        subtotal = (Convert.ToDecimal(item.Product.Price) * item.Quantity) + subtotal;
+                        totalPrice = Convert.ToDecimal(item.Product.Price) * item.Quantity;
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Description)
+                            </td>
+                            <td>
+                                @if (@item.Quantity <= 1)
+                                {
+                                    <button type="button" class="Quantityminus" data-id="@item.ProductId" disabled>-</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="Quantityminus" data-id="@item.ProductId">-</button>
+                                }
+                                <input style="width:50px" type="number" value="@item.Quantity" readonly width="20" />
+                                <button type="button" class="Quantityplus" value="@item.ProductId">+</button>
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => totalPrice)
+                            </td>
+                            <td>
+                                <button class="removeFromCart btn-danger" data-id="@item.ProductId">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><p>Subtotal</p></td>
+                        <td>@subtotal</td>
+                    </tr>
+
+                }
+
+                else
+                {
+
+                    foreach (var item in Model)
+                    {
+                        subtotal = (Convert.ToDecimal(item.Price) * item.Quantity) + subtotal;
+                        totalPrice = Convert.ToDecimal(item.Price) * item.Quantity;
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @if (@item.Quantity <= 1)
+                                {
+                                    <button type="button" class="Quantityminus" data-id="@item.ProductId" disabled>-</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="Quantityminus" data-id="@item.ProductId">-</button>
+                                }
+                                <input style="width:50px" type="number" value="@item.Quantity" readonly width="20" />
+                                <button type="button" class="Quantityplus" value="@item.ProductId">+</button>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => totalPrice)
+                            </td>
+                            <td>
+                                <button class="removeFromCart btn-danger" data-id="@item.ProductId">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><p><b>Subtotal</b></p></td>
+                        <td>@subtotal</td>
+                    </tr>
+                }
+            </table>
+            @Html.ActionLink("Continue Shopping", "DisplayProduct", "Product")
+            <input type="button" class="btn-success nav navbar-right" value="Checkout" onclick="location.href='@Url.Action("Checkout")'" />
+        }
+
+    </div>
+
+<script>
+
+    $(".removeFromCart").click(function () {
+        debugger;
+        var confirmDelete = confirm("Are you sure to remove the selected item from cart ?");
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/ManageCart/DeleteCartProduct',
+                data: {
+                    ProductId: $(this).attr('data-id')
+                }
+            })
+                .done(function () {
+                    $(document).ajaxStop(function () {
+                        window.location.reload();
+                    });
+                })
+                .fail(function () {
+                    alert("Failed to remove from cart !");
+                })
+        }
+    });
+
+    $(".Quantityminus").click(function () {
+        debugger;
+            $.ajax({
+                type: 'POST',
+                url: '/ManageCart/DecreaseQuantity',
+                data: {
+                    ProductId: $(this).attr('data-id')
+                },
+
+            })
+
+                .done(function () {
+                    $(document).ajaxStop(function () {
+                        window.location.reload();
+                    });
+                })
+                .fail(function () {
+                    alert("Failed to remove from cart !");
+                })
+    });
+
+    $(".Quantityplus").click(function () {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: '/ManageCart/IncreaseQuantity',
+            data: {
+                ProductId: $(this).attr('value')
+            },
+
+        })
+            .done(function () {
+                $(document).ajaxStop(function () {
+                    window.location.reload();
+                });
+            })
+            .fail(function () {
+                alert("Failed to remove from cart !");
+            })
+    });
+</script>

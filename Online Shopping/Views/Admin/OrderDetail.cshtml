@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.OrderDetailViewModel>
+
+@{
+    ViewBag.Title = "OrderDetail";
+    string Username = null, Address = null, PhoneNumber = null;
+}
+
+<h2>OrderDetail</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    Username = item.User.Username; Address = item.User.Address; PhoneNumber = item.User.PhoneNumber;
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.ProductName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+    </tr>
+}
+
+</table>
+
+<h3>Customer Details</h3>
+<div style="width:200px; border:1px solid">
+    <p>@Username</p>
+    <p>@Address</p>
+    <p>@PhoneNumber</p>
+</div>

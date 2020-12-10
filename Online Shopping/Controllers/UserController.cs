@@ -6,6 +6,12 @@ using Online_Shopping.ViewModel;
 
 namespace Online_Shopping.Controllers
 {
+    /// <summary>
+    /// User controller : To Display user.
+    /// Admin can Edit user roles
+    /// </summary>
+   
+    [Authorize(Roles ="Admin")]
     public class UserController : Controller
     {
         UserService userService = new UserService();

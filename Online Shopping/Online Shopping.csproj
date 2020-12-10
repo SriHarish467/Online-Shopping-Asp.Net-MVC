@@ -128,6 +128,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageCartController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MyRoleProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,9 +176,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Product\CreateProduct.cshtml" />
-    <Content Include="Views\Product\DeleteProduct.cshtml" />
-    <Content Include="Views\Product\EditProduct.cshtml" />
-    <Content Include="Views\Product\DisplayProduct.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\User\DisplayUser.cshtml" />
@@ -185,7 +184,14 @@
     <Content Include="Views\User\DisplayRole.cshtml" />
     <Content Include="Views\Account\UpdateProfile.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
-    <Content Include="Views\Product\DisplayCart.cshtml" />
+    <Content Include="Views\ManageCart\DisplayCart.cshtml" />
+    <Content Include="Views\Product\DisplayProduct.cshtml" />
+    <Content Include="Views\Product\EditProduct.cshtml" />
+    <Content Include="Views\ManageCart\Checkout.cshtml" />
+    <Content Include="Views\Admin\PendingOrder.cshtml" />
+    <Content Include="Views\Admin\OrderDetail.cshtml" />
+    <Content Include="Views\Admin\CompleteOrder.cshtml" />
+    <Content Include="Views\Admin\CancelOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Online Shopping.DomainModel\Online Shopping.DomainModel.csproj">
@@ -214,9 +220,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\ManageCart\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

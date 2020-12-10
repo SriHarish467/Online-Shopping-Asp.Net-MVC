@@ -11,10 +11,13 @@ namespace Online_Shopping.ServiceLayer
     {
         ProductRepository productRepository = new ProductRepository();
         
-        public IEnumerable<Product> DisplayProduct()
+        public IEnumerable<ProductViewModel> DisplayProduct()
         {
-           return productRepository.DisplayProduct();
-
+           IEnumerable<Product> product = productRepository.DisplayProduct();
+           var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductViewModel>());
+           var mapper = new Mapper(config);
+           IEnumerable<ProductViewModel> productViewModel = mapper.Map<IEnumerable<ProductViewModel>>(product);
+            return productViewModel;
         }
 
         public void CreateProduct(ProductViewModel productViewModel)
@@ -25,26 +28,27 @@ namespace Online_Shopping.ServiceLayer
             productRepository.AddProduct(product);
         }
 
-        public Product EditProduct(int id)
+        public ProductViewModel EditProduct(int ProductId)
         {
-            return productRepository.EditProduct(id);
+            Product product = productRepository.EditProduct(ProductId);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductViewModel>());
+            var mapper = new Mapper(config);
+            ProductViewModel productViewModel = mapper.Map<Product, ProductViewModel>(product);
+            return productViewModel;
         }
 
-        public void EditProduct(Product product)
+        public void EditProduct(ProductViewModel productViewModel)
         {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<ProductViewModel, Product>());
+            var mapper = new Mapper(config);
+            Product product = mapper.Map<ProductViewModel, Product>(productViewModel);
             productRepository.EditProduct(product);
         }
 
-        public Product DeleteProduct(int id)
+        public void DeleteProduct(int ProductId)
         {
-            return productRepository.DeleteProduct(id);
+             productRepository.DeleteProduct(ProductId);
         }
 
-        
-
-        public void DeleteConfirmed(int id)
-        {
-            productRepository.DeleteConfirmed(id);
-        }
     }
 }

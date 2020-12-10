@@ -33,15 +33,10 @@ namespace Online_Shopping.Repository
             shoppingDbContext.Entry(product).State = EntityState.Modified;
             shoppingDbContext.SaveChanges();
         }
-        public Product DeleteProduct(int id)
-        {
-            Product product = shoppingDbContext.Products.Find(id);
-            return product;
-        }
 
-        public void DeleteConfirmed(int id)
+        public void DeleteProduct(int ProductId)
         {
-            Product product=shoppingDbContext.Products.Find(id);
+            Product product=shoppingDbContext.Products.Find(ProductId);
             shoppingDbContext.Products.Remove(product);
             shoppingDbContext.SaveChanges();
         }

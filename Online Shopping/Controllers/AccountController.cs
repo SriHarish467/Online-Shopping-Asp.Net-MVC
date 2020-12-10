@@ -7,6 +7,11 @@ using System.Web.Security;
 
 namespace Online_Shopping.Controllers
 {
+    /// <summary>
+    /// Account controller : To manage user registration and login.
+    /// Allows user to register if they are new; login if they are registered users.
+    /// </summary>
+    
     public class AccountController : Controller
     {
         AccountService accountService = new AccountService();
@@ -31,6 +36,7 @@ namespace Online_Shopping.Controllers
                         accountService.NewUserSignUp(userViewModel);
                         FormsAuthentication.SetAuthCookie(userViewModel.Username, false);
                         Session["Username"] = userViewModel.Username.ToString();
+                        Session["Cart"]=manageCartService.UpdateCart(userViewModel.Username.ToString(),(List<CartViewModel>)Session["Cart"]);
                         return RedirectToAction("DisplayProduct","Product");
                     }
                     else
@@ -54,7 +60,7 @@ namespace Online_Shopping.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginViewModel loginViewModel)
+        public ActionResult Login(LoginViewModel loginViewModel,string returnUrl)
         {
             if(ModelState.IsValid)
             {
@@ -63,16 +69,15 @@ namespace Online_Shopping.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(loginViewModel.Username, false);
                     Session["Username"] = loginViewModel.Username.ToString();
-                    if (Session["CartViewModel"] == null)
+                    Session["Count"] = manageCartService.UpdateCart(loginViewModel.Username.ToString(),(List<CartViewModel>) Session["Cart"]);
+                    if (returnUrl != null)
                     {
-                        List<CartViewModel> cartViewModel = new List<CartViewModel>();
-                        Session["CartViewModel"] = manageCartService.GetCartDetails(Convert.ToString(Session["Username"]),cartViewModel);
+                        return Redirect(returnUrl);
                     }
                     else
                     {
-                        Session["CartViewModel"] = manageCartService.GetCartDetails(Convert.ToString(Session["Username"]), Session["CartViewModel"] as List<CartViewModel>);
-                    }
                         return RedirectToAction("DisplayProduct", "Product");
+                    }
                 }
                 else
                 {
@@ -88,11 +93,10 @@ namespace Online_Shopping.Controllers
 
         public ActionResult Logout()
         {
-            List<CartViewModel> cartViewModel = (List<CartViewModel>)Session["CartViewModel"];
-            manageCartService.UpdateCartDb(Convert.ToString(Session["Username"]),cartViewModel);
-            Session["CartViewModel"] = null;
             FormsAuthentication.SignOut();
             Session["Username"] = null;
+            Session["Cart"] = null;
+            Session["Count"] = null;
             return RedirectToAction("Index", "Home");
         }
 

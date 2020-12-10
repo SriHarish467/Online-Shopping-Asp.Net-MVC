@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.OrderViewModel>
+
+@{
+    ViewBag.Title = "PendingOrder";
+}
+
+<h2>Customer PendingOrder</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDateTime)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    if (item.Status == null)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderDateTime)
+        </td>
+        <td>
+            <input type="button" class="btn-primary " value="ViewOrderDetail" onclick="location.href='@Url.Action("OrderDetail", new { OrderId = item.OrderId })'" />
+            <button class="completeorder btn-success" data-id="@item.OrderId">CompleteOrder</button>
+        </td>
+    </tr>
+    }
+}
+
+</table>
+<script>
+    $(".completeorder").click(function () {
+        debugger;
+        var confirmDelete = confirm("Are you sure to complete the order ?");
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/CompleteOrder',
+                data: {
+                    OrderId: $(this).attr('data-id')
+                },
+
+            })
+
+                .done(function () {
+                    $(document).ajaxStop(function () {
+                        window.location.reload();
+                    });
+                })
+                .fail(function () {
+                    alert("Failed !");
+                })
+        }
+    });
+
+</script>

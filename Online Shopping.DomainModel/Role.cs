@@ -10,7 +10,7 @@ namespace Online_Shopping.DomainModel
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RoleId { get; set; }
         
-       // [Required]
+        [Required]
         public string RoleName { get; set; }
 
     }

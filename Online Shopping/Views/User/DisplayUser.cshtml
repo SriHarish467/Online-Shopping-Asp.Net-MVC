@@ -24,6 +24,8 @@
     </tr>
 
 @foreach (var item in Model) {
+    if (item.Role.RoleName != "Admin")
+    {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Username)
@@ -35,10 +37,11 @@
             @Html.DisplayFor(modelItem => item.Role.RoleName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "EditUser", new {  id=item.UserId }) |
-            @Html.ActionLink("Delete", "DeleteUser", new {  id=item.UserId })
+            @Html.ActionLink("Edit", "EditUser", new { id = item.UserId }) |
+            @Html.ActionLink("Delete", "DeleteUser", new { id = item.UserId })
         </td>
     </tr>
+    }
 }
 
 </table>

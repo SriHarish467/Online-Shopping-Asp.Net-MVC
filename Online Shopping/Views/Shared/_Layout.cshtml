@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -16,30 +17,43 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Online Shopping", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
+                    <li>@Html.ActionLink("Product", "DisplayProduct", "Product")</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("User", "DisplayUser", "User")</li>
+                        <li>@Html.ActionLink("PendingOrder", "PendingOrder", "Admin")</li>
+                        <li>@Html.ActionLink("CompleteOrder", "CompleteOrder", "Admin")</li>
+                        <li>@Html.ActionLink("CancelOrder", "CancelOrder", "Admin")</li>
+                    }
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (Session["username"] != null)
                     {
                         <li><a>Hi @Session["username"]</a></li>
                         <li>@Html.ActionLink("UpdateProfile", "UpdateProfile", "Account")</li>
-                        <li>@Html.ActionLink("Cart", "DisplayCart", "Product")</li>
                         <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
 
                     }
                     else
                     {
                         <li>@Html.ActionLink("Signup", "SignUp", "Account")</li>
-                        <li>@Html.ActionLink("Cart", "DisplayCart", "Product")</li>
                         <li>@Html.ActionLink("Login", "Login", "Account")</li>
                     }
-
+                    @if (Session["Count"] == null || Convert.ToInt32(Session["Count"]) == 0)
+                    {
+                        <li>@Html.ActionLink("Cart", "DisplayCart", "ManageCart")</li>
+                    }
+                    else
+                    {
+                    <li>@Html.ActionLink("Cart(" + Session["Count"] + ")", "DisplayCart", "ManageCart")</li>
+                    }
                 </ul>
             </div>
         </div>
@@ -48,11 +62,11 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Online Shopping Application</p>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+   
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

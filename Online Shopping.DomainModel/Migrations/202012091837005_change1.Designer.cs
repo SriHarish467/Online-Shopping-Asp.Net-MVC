@@ -7,13 +7,13 @@ namespace Online_Shopping.DomainModel.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class change2 : IMigrationMetadata
+    public sealed partial class change1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(change2));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(change1));
         
         string IMigrationMetadata.Id
         {
-            get { return "202012011005529_change2"; }
+            get { return "202012091837005_change1"; }
         }
         
         string IMigrationMetadata.Source

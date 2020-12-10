@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Online_Shopping.ServiceLayer;
-using Online_Shopping.DomainModel;
 using Online_Shopping.ViewModel;
 using System;
 
-
 namespace Online_Shopping.Controllers
 {
+    /// <summary>
+    /// Product controller : To Display and Manage Products.
+    /// Admin can create Products,Edit,Delete
+    /// </summary>
+    
     public class ProductController : Controller
     {
         ProductService productService = new ProductService();
-        
-        ManageCartService manageCartService = new ManageCartService();
-        
+
         // GET: Product
         public ActionResult DisplayProduct()
         {
-            IEnumerable<Product> product = productService.DisplayProduct();
-            return View(product);
+            IEnumerable<ProductViewModel> productViewModel = productService.DisplayProduct();
+            return View(productViewModel);
         }
 
         public ViewResult CreateProduct()
@@ -41,13 +42,16 @@ namespace Online_Shopping.Controllers
             }
         }
 
-        public ActionResult EditProduct(int id)
+        public ActionResult EditProduct(int? ProductId)
         {
-           
-            Product product = productService.EditProduct(id);
-            if(product != null)
+            if(ProductId == null)
             {
-                return View(product);
+                return HttpNotFound();
+            }
+            ProductViewModel productViewModel = productService.EditProduct(Convert.ToInt32(ProductId));
+            if (productViewModel != null)
+            {
+                return View(productViewModel);
             }
             else
             {
@@ -56,65 +60,29 @@ namespace Online_Shopping.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditProduct(Product product)
+        public ActionResult EditProduct(ProductViewModel productViewModel)
         {
             if (ModelState.IsValid)
             {
-                productService.EditProduct(product);
+                productService.EditProduct(productViewModel);
                 return Redirect("DisplayProduct");
             }
             else
             {
                 ModelState.AddModelError("", "error");
-                return View(product);
+                return View(productViewModel);
             }
         }
-
-        public ActionResult DeleteProduct(int id)
+        public ActionResult DeleteProduct(int? ProductId)
         {
-            Product product = productService.DeleteProduct(id);
-            if(product != null)
-            {
-                return View(product);
-            }
-            else
+            if(ProductId == null)
             {
                 return HttpNotFound();
             }
+            productService.DeleteProduct(Convert.ToInt32(ProductId));
+            
+            return View();
         }
 
-        [HttpPost]
-        [ActionName("DeleteProduct")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            productService.DeleteConfirmed(id);
-            return Redirect("DisplayProduct");
-        }
-
-        public ActionResult AddCart(int? id)
-        {
-            if(id == null)
-            {
-                return HttpNotFound();
-            }
-            List<CartViewModel> data = new List<CartViewModel>();
-           if (Session["CartViewModel"] == null)
-            {
-               Session["CartViewModel"] = manageCartService.AddtoCart(Convert.ToInt32(id),data);
-            }
-            else
-            {
-                 data = Session["CartViewModel"] as List<CartViewModel>;
-                manageCartService.AddtoCart(Convert.ToInt32(id), data);
-            }
-
-            return RedirectToAction("DisplayProduct");
-        }
-
-        public ActionResult DisplayCart()
-        {
-            List<CartViewModel> cart = (List<CartViewModel>)Session["CartViewModel"];
-            return View(cart);
-        }
     }
 }
