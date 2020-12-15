@@ -28,7 +28,7 @@
             @Html.DisplayFor(modelItem => item.OrderDateTime)
         </td>
         <td>
-            <input type="button" class="btn-primary " value="ViewOrderDetail" onclick="location.href='@Url.Action("OrderDetail", new { OrderId = item.OrderId })'" />
+            <input type="button" class="btn-primary " value="ViewOrderDetail" onclick="location.href='@Url.Action("CompleteOrderDetail", new { OrderId = item.OrderId })'" />
          </td>
     </tr>
     }

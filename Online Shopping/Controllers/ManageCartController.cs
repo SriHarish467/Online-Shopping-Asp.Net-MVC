@@ -109,29 +109,147 @@ namespace Online_Shopping.Controllers
         public ActionResult Checkout()
         {
             List<CartViewModel> cartViewModel = manageCartService.DisplayCart(Convert.ToString(Session["Username"]));
-            Session["Checkout"] = 1;
             return View(cartViewModel);
         }
 
        [Authorize]
-        public ActionResult ProductOrder()
+        public ActionResult CartPlaceOrder()
         {
-            if (Convert.ToInt32(Session["Checkout"]) == 1)
+            
+            bool value = manageCartService.CheckDetail(Convert.ToString(Session["Username"]));
+            if (value)
+            {
+                return Redirect("CartShippingDetail");
+            }
+            else
             {
                 manageCartService.Checkout(Convert.ToString(Session["Username"]));
                 manageCartService.RemoveCart(Convert.ToString(Session["Username"]));
                 Session["Count"] = null;
+                return RedirectToAction("DisplayProduct", "Product");
+            }
+        }
+
+        public ActionResult CartShippingDetail()
+        {
+            UserDetailViewModel userDetailViewModel = manageCartService.ShippingDetail(Convert.ToString(Session["Username"]));
+            return View(userDetailViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult CartShippingDetail(UserDetailViewModel userDetailViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                manageCartService.ShippingDetail(userDetailViewModel);
+                return Redirect("Checkout");
             }
             else
             {
-                return Redirect("DisplayCart");
+                ModelState.AddModelError("", "error");
             }
             return View();
         }
 
+        [Authorize]
         public ActionResult YourOrder()
         {
+            List<OrderDetailViewModel> orderDetailViewModel = manageCartService.YourOrder(Convert.ToString(Session["Username"]));
+            return View(orderDetailViewModel);
+        }
 
+        [Authorize]
+        public ActionResult CancelOrder(int? OrderDetailId)
+        {
+            if(OrderDetailId == null)
+            {
+                return HttpNotFound();
+            }
+            manageCartService.CancelOrder(Convert.ToInt32(OrderDetailId));
+            return Redirect("YourOrder");
+        }
+
+        [Authorize]
+        public ActionResult OrderHistory()
+        {
+            List<OrderDetailViewModel> orderDetailViewModel = manageCartService.OrderHistory(Convert.ToString(Session["Username"]));
+            return View(orderDetailViewModel);
+        }
+
+        [Authorize]
+        public ActionResult Buy(int ProductId,string ProductName, decimal Price, string Description)
+        {
+            if (Session["Buy"] == null)
+            {
+                string Username = Convert.ToString(Session["Username"]);
+                Session["Buy"] = manageCartService.Buy(ProductId, ProductName, Price, Description, Username);
+                return Redirect("DisplayBuy");
+            }
+            else
+            {
+                TempData["Buy"]="AddtoCart to buy";
+                return RedirectToAction("DisplayProduct","Product");
+            }
+        }
+
+        public ActionResult BuyIncreaseQuantity()
+        {
+            Session["Buy"] = manageCartService.BuyIncreaseQuantity((List<CartViewModel>)Session["Buy"]);
+            return RedirectToAction("DisplayBuy");
+        }
+
+        public ActionResult BuyDecreaseQuantity()
+        {
+            Session["Buy"] = manageCartService.BuyDecreaseQuantity((List<CartViewModel>)Session["Buy"]);
+            return RedirectToAction("DisplayBuy");
+        }
+
+        public ActionResult DisplayBuy()
+        {
+            if(Session["Buy"] == null)
+            {
+                return RedirectToAction("DisplayProduct", "Product");
+            }
+            Session["Buy"] = manageCartService.DisplayBuy(Convert.ToString(Session["Username"]),(List<CartViewModel>)Session["Buy"]);
+            return View((List<CartViewModel>) Session["Buy"]);
+        }
+
+        public ActionResult DeleteBuy()
+        {
+            Session["Buy"] = null;
+            return RedirectToAction("DisplayProduct","Product");
+        }
+
+        public ActionResult ShippingDetail()
+        {
+            UserDetailViewModel userDetailViewModel = manageCartService.ShippingDetail(Convert.ToString(Session["Username"]));
+            return View(userDetailViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ShippingDetail(UserDetailViewModel userDetailViewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                manageCartService.ShippingDetail(userDetailViewModel);
+                return Redirect("DisplayBuy");
+            }
+            else
+            {
+                ModelState.AddModelError("", "error");
+            }
+            return View();
+        }
+
+        public ActionResult PlaceOrder()
+        {
+            bool value = manageCartService.CheckDetail(Convert.ToString(Session["Username"]));
+            if(value)
+            {
+                return Redirect("ShippingDetail");
+            }
+            manageCartService.PlaceOrder((List<CartViewModel>)Session["Buy"]);
+            return RedirectToAction("DisplayProduct","Product");
         }
     }
 

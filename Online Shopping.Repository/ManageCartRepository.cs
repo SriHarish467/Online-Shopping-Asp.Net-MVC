@@ -56,5 +56,27 @@ namespace Online_Shopping.Repository
         {
             return shoppingDbContext.Users.Single(x => x.Username == Username);
         }
+
+        public List<OrderDetail> YourOrder(string Username)
+        {
+            return shoppingDbContext.OrderDetails.Where(x => x.User.Username == Username).ToList();
+        }
+
+        public OrderDetail CancelOrder(int OrderDetailId)
+        {
+            return shoppingDbContext.OrderDetails.Find(OrderDetailId);
+        }
+
+        public void UpdateOrderDetail(OrderDetail orderDetail)
+        {
+            shoppingDbContext.Entry(orderDetail).State = EntityState.Modified;
+            shoppingDbContext.SaveChanges();
+        }
+
+        public void ShippingDetail(User user)
+        {
+            shoppingDbContext.Entry(user).State = EntityState.Modified;
+            shoppingDbContext.SaveChanges();
+        }
     }
 }

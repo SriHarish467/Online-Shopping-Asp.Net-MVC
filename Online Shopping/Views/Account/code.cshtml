@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+
+<h4>Enter otp to change New Password</h4>
+
+<div>
+    @using (Html.BeginForm(FormMethod.Post))
+    {
+        <div class="form-group ">
+            @Html.TextBox("otp", null, new { @class = " form-control ", @placeHolder = "otp" })
+            <div> <button class="btn btn-primary" type="submit">Submit</button> </div>
+        </div>
+
+    }
+</div>
+

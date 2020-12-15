@@ -54,12 +54,14 @@
     <Compile Include="CartViewModel.cs" />
     <Compile Include="EditUserViewModel.cs" />
     <Compile Include="LoginViewModel.cs" />
+    <Compile Include="NewPasswordViewModel.cs" />
     <Compile Include="OrderDetailViewModel.cs" />
     <Compile Include="OrderViewModel.cs" />
     <Compile Include="ProductViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleViewModel.cs" />
     <Compile Include="UpdateUserProfileViewModel.cs" />
+    <Compile Include="UserDetailViewModel.cs" />
     <Compile Include="UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

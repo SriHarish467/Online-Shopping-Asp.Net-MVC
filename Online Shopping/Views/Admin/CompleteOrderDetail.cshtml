@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.OrderDetailViewModel>
+
+@{
+    ViewBag.Title = "OrderDetail";
+    string Username = null, Address = null, PhoneNumber = null;
+    decimal totalPrice = 0.000M;
+}
+
+<h2>OrderDetail</h2>
+@if (Model == null)
+{
+    <p>No order</p>
+}
+
+else if(Model.Count() == 0)
+{
+    <p>Order Cancel by user</p>
+}
+else
+{
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        Username = item.User.Username; Address = item.User.Address; PhoneNumber = item.User.PhoneNumber;
+        totalPrice = Convert.ToDecimal(item.Quantity * item.Product.Price);
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => totalPrice)
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<h3>Customer Detail</h3>
+<div style="width:200px; border:1px solid">
+    <p>@Username</p>
+    <p>@Address</p>
+    <p>@PhoneNumber</p>
+</div>
+}

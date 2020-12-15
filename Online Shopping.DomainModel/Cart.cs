@@ -11,6 +11,9 @@ namespace Online_Shopping.DomainModel
         public int CartId { get; set; }
         public int Quantity { get; set; }
         public string Username { get; set; }
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }

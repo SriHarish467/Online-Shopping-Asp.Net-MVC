@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Online_Shopping.ServiceLayer;
 using Online_Shopping.ViewModel;
 using System;
+using System.Linq;
 
 namespace Online_Shopping.Controllers
 {
@@ -19,6 +20,20 @@ namespace Online_Shopping.Controllers
         public ActionResult DisplayProduct()
         {
             IEnumerable<ProductViewModel> productViewModel = productService.DisplayProduct();
+            return View(productViewModel);
+        }
+
+        [HttpPost]
+        [ActionName("DisplayProduct")]
+        public ActionResult SearchProduct(string search)
+        {
+            IEnumerable<ProductViewModel> productViewModel = productService.DisplayProduct();
+
+            if (search != null)
+            {
+                productViewModel = productViewModel.Where(x => x.ProductName.ToLower().Contains(search.ToLower())).ToList();
+                return View(productViewModel);
+            }
             return View(productViewModel);
         }
 

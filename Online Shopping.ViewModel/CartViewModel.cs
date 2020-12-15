@@ -12,6 +12,10 @@ namespace Online_Shopping.ViewModel
         public string Description { get; set; }
         public int ProductId { get; set; }
         public decimal TotalPrice { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
         public string ProductName { get; set; }
         
         public virtual Product Product { get; set; }

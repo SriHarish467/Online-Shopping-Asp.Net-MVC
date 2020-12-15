@@ -1,0 +1,156 @@
+﻿@model IEnumerable<Online_Shopping.ViewModel.CartViewModel>
+
+@{
+    ViewBag.Title = "DisplayBuy";
+    decimal totalPrice = 0.000M;
+    string Username = null, Address = null, PhoneNumber = null;
+}
+
+
+
+@if (Model == null)
+{
+    <h2>No order</h2>
+    @Html.ActionLink("Continue Shopping", "DisplayProduct", "Product")
+}
+else
+{
+  
+    <h2>OrderDetail</h2>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            Username = item.Username; Address = item.Address; PhoneNumber = item.PhoneNumber;
+            totalPrice = Convert.ToDecimal(item.Price) * item.Quantity;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @if (@item.Quantity <= 1)
+                    {
+                        <button type="button" class="Minus" disabled>-</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="Minus">-</button>
+                    }
+                    <input style="width:50px" type="number" value="@item.Quantity" readonly width="20" />
+                    <button type="button" class="Plus">+</button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => totalPrice)
+                </td>
+
+                <td>
+                    <button type="button" class="delete">Delete</button>
+                </td>
+            </tr>
+        }
+
+
+    </table>
+
+    <h3>Customer Detail</h3>
+    <div style="width:300px; border:1px solid">
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Address</th>
+                <th>PhoneNumber</th>
+            </tr>
+            <tr>
+                <td>@Username</td>
+                <td>@Address</td>
+                <td>@PhoneNumber</td>
+            </tr>
+        </table>
+
+        <input type="button" class="btn-default" value="Change Address" onclick="location.href='@Url.Action("ShippingDetail")'" />
+    </div>
+    <div class="nav navbar-right">
+        <input type="button" class="btn-default" value="Place Order" onclick="location.href='@Url.Action("PlaceOrder")'" />
+    </div>
+}
+
+<script>
+
+    $(".delete").click(function () {
+        debugger;
+        var confirmDelete = confirm("Are you sure to delete Product ?");
+        if (confirmDelete) {
+            $.ajax({
+                type: 'POST',
+                url: '/ManageCart/DeleteBuy'
+            })
+                .done(function () {
+                    $(document).ajaxStop(function () {
+                        window.location.reload();
+                    });
+                })
+                .fail(function () {
+                    alert("Failed to remove from cart !");
+                })
+        }
+    });
+
+    $(".Minus").click(function () {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: '/ManageCart/BuyDecreaseQuantity'
+
+        })
+
+            .done(function () {
+                $(document).ajaxStop(function () {
+                    window.location.reload();
+                });
+            })
+            .fail(function () {
+                alert("Failed to remove from cart !");
+            })
+    });
+
+    $(".Plus").click(function () {
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: '/ManageCart/BuyIncreaseQuantity'
+
+        })
+            .done(function () {
+                $(document).ajaxStop(function () {
+                    window.location.reload();
+                });
+            })
+            .fail(function () {
+                alert("Failed to remove from cart !");
+            })
+    });
+</script>

@@ -26,10 +26,26 @@ namespace Online_Shopping.Repository
             shoppingDbContext.Entry(order).State = EntityState.Modified;
             shoppingDbContext.SaveChanges();
         }
+        public void RemoveProduct(OrderDetail orderDetail)
+        {
+            shoppingDbContext.OrderDetails.Remove(orderDetail);
+            shoppingDbContext.SaveChanges();
+        }
+
         public void UpdateOrderDetail(OrderDetail orderDetail)
         {
             shoppingDbContext.Entry(orderDetail).State = EntityState.Modified;
             shoppingDbContext.SaveChanges();
+        }
+
+        public OrderDetail GetOrderDetail(int OrderId)
+        {
+           return shoppingDbContext.OrderDetails.First(x => x.OrderId == OrderId);
+        }
+
+        public User GetUserDetail(int UserId)
+        {
+            return shoppingDbContext.Users.Single(x => x.UserId == UserId);
         }
     }
 }

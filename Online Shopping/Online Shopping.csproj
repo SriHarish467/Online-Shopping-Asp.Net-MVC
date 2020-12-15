@@ -191,7 +191,16 @@
     <Content Include="Views\Admin\PendingOrder.cshtml" />
     <Content Include="Views\Admin\OrderDetail.cshtml" />
     <Content Include="Views\Admin\CompleteOrder.cshtml" />
-    <Content Include="Views\Admin\CancelOrder.cshtml" />
+    <Content Include="Views\ManageCart\YourOrder.cshtml" />
+    <Content Include="Views\ManageCart\OrderHistory.cshtml" />
+    <Content Include="Views\ManageCart\DisplayBuy.cshtml" />
+    <Content Include="Views\ManageCart\ShippingDetail.cshtml" />
+    <Content Include="Views\ManageCart\CartShippingDetail.cshtml" />
+    <Content Include="Views\ManageCart\Buy.cshtml" />
+    <Content Include="Views\Admin\CompleteOrderDetail.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\code.cshtml" />
+    <Content Include="Views\Account\NewPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Online Shopping.DomainModel\Online Shopping.DomainModel.csproj">

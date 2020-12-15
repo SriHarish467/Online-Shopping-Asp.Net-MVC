@@ -14,5 +14,6 @@ namespace Online_Shopping.ViewModel
         public virtual User User { get; set; }
         public int ProductId { get; set; }
         public virtual Product Product { get; set; }
+        public int TotalPrice { get; set; }
     }
 }

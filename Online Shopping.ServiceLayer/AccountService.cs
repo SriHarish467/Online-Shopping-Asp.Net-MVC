@@ -75,5 +75,22 @@ namespace Online_Shopping.ServiceLayer
             User user = mapper.Map<User>(userViewModel);
             accountRepository.UpdateProfile(user);
         }
+
+        public NewPasswordViewModel NewPassword(string Email)
+        {
+            User user = accountRepository.NewPassword(Email);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<User, NewPasswordViewModel>());
+            var mapper = new Mapper(config);
+            NewPasswordViewModel newPasswordViewModel = mapper.Map<NewPasswordViewModel>(user);
+            return newPasswordViewModel;
+        }
+
+        public void NewPassword(NewPasswordViewModel newPasswordViewModel)
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<NewPasswordViewModel, User>());
+            var mapper = new Mapper(config);
+            User user = mapper.Map<User>(newPasswordViewModel);
+            accountRepository.UpdateProfile(user);
+        }
     }
 }

@@ -41,5 +41,9 @@ namespace Online_Shopping.Repository
             shoppingDbContext.SaveChanges();
         }
       
+        public User NewPassword(string Email)
+        {
+            return shoppingDbContext.Users.Single(x => x.EmailId == Email);
+        }
     }
 }

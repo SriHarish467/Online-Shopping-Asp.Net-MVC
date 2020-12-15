@@ -30,7 +30,11 @@
                         <li>@Html.ActionLink("User", "DisplayUser", "User")</li>
                         <li>@Html.ActionLink("PendingOrder", "PendingOrder", "Admin")</li>
                         <li>@Html.ActionLink("CompleteOrder", "CompleteOrder", "Admin")</li>
-                        <li>@Html.ActionLink("CancelOrder", "CancelOrder", "Admin")</li>
+                    }
+                    @if (Session["Username"] != null && User.IsInRole("User"))
+                    {
+                        <li>@Html.ActionLink("YourOrder", "YourOrder", "ManageCart")</li>
+                        <li>@Html.ActionLink("Orderhistory", "OrderHistory", "ManageCart")</li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

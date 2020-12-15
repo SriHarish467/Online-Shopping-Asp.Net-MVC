@@ -5,7 +5,18 @@
 }
 
 <h2>DisplayProduct</h2>
+<div>
+    @using (Html.BeginForm( FormMethod.Post))
+    {
+    <div class="form-group col-md-offset-3">
+        @Html.TextBox("search", null, new { @class = " form-control col-md-2", @placeHolder = "Search"})
+        <div class="col-md-offset-4">        <button class="btn btn-primary" type="submit">Search</button> </div>
+    </div>
+         
+    }
+</div>
 
+@TempData["Buy"]
 @if (User.IsInRole("Admin"))
 {
     <p>
@@ -23,47 +34,49 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        
-            @if (User.IsInRole("Admin"))
-            {
-                <th>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <th>
                 @Html.DisplayNameFor(model => model.Stock)
-                </th>
-            }
-        
+            </th>
+        }
+
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.ProductName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Price)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Description)
-    </td>
-    
-        @if (User.IsInRole("Admin"))
-        {
-           <td>@Html.DisplayFor(modelItem => item.Stock)</td>
-           <td>
-           <input type="button" class="btn-info" value="Edit" onclick="location.href='@Url.Action("EditProduct", new { ProductId = item.ProductId })'"/>
-           <button class="deleteProduct btn-danger" data-id="@item.ProductId">Delete</button>
-            @*@Html.ActionLink("Buy", "AddCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })*@
-            </td>
-         }
-      else
-      { 
+        <tr>
             <td>
-           <a href="@Url.Action("AddCart", "ManageCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })" class=" btn btn-success">AddToCart</a>
-             </td>
-      }
-        
-    </tr>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                <td>
+                    <input type="button" class="btn-info" value="Edit" onclick="location.href='@Url.Action("EditProduct", new { ProductId = item.ProductId })'" />
+                    <button class="deleteProduct btn-danger" data-id="@item.ProductId">Delete</button>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a href="@Url.Action("Buy", "ManageCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })" class=" btn btn-success">Buy</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("AddCart", "ManageCart", new { ProductId = item.ProductId, ProductName = item.ProductName, Price = item.Price, Description = item.Description })" class=" btn btn-success">AddToCart</a>
+                </td>
+            }
+
+        </tr>
     }
 
 </table>

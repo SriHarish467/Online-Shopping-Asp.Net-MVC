@@ -36,9 +36,23 @@ namespace Online_Shopping.ServiceLayer
             List<OrderDetail> orderDetail = adminRepository.OrderDetail(OrderId);
             foreach(var item in orderDetail)
             {
-                item.Status = "Complete";
-                adminRepository.UpdateOrderDetail(item);
+                if(item.Status == "Cancel")
+                {
+                    adminRepository.RemoveProduct(item);
+                }
+                else
+                {
+                    item.Status = "Complete";
+                    adminRepository.UpdateOrderDetail(item);
+                }
             }
+        }
+
+        public string GetUsername(int OrderId)
+        {
+            OrderDetail orderDetail = adminRepository.GetOrderDetail(OrderId);
+            User user = adminRepository.GetUserDetail(orderDetail.UserId);
+            return user.EmailId;
         }
     }
 }

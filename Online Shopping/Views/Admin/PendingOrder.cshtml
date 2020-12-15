@@ -4,8 +4,15 @@
     ViewBag.Title = "PendingOrder";
 }
 
-<h2>Customer PendingOrder</h2>
 
+<h2>Customer PendingOrder</h2>
+@if (Model == null)
+{
+    <p>No orders</p>
+}
+
+else
+{
 <table class="table">
     <tr>
         <th>
@@ -17,7 +24,8 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     if (item.Status == null)
     {
     <tr>
@@ -30,12 +38,15 @@
         <td>
             <input type="button" class="btn-primary " value="ViewOrderDetail" onclick="location.href='@Url.Action("OrderDetail", new { OrderId = item.OrderId })'" />
             <button class="completeorder btn-success" data-id="@item.OrderId">CompleteOrder</button>
+            <input type="button" class="btn-primary " value="Send Email" onclick="location.href='@Url.Action("SendMailToUser", new { OrderId = item.OrderId })'" />
         </td>
     </tr>
     }
 }
+    
 
 </table>
+}
 <script>
     $(".completeorder").click(function () {
         debugger;
@@ -43,7 +54,7 @@
         if (confirmDelete) {
             $.ajax({
                 type: 'POST',
-                url: '/Admin/CompleteOrder',
+                url: '/Admin/PendingOrder',
                 data: {
                     OrderId: $(this).attr('data-id')
                 },
