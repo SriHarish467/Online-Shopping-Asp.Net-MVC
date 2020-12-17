@@ -2,6 +2,8 @@
 using Online_Shopping.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -28,10 +30,10 @@ namespace Online_Shopping.Controllers
         {
             if(ModelState.IsValid)
             {
-                bool existingusername = accountService.ExistingUserSignUp(userViewModel);
+                bool existingusername = accountService.ExistingUserSignUp(userViewModel.Username);
                 if (!existingusername)
                 {
-                    bool existingemail = accountService.ExistingEmailSignUp(userViewModel);
+                    bool existingemail = accountService.ExistingEmailSignUp(userViewModel.EmailId);
                     if (!existingemail)
                     {
                         accountService.NewUserSignUp(userViewModel);
@@ -65,7 +67,7 @@ namespace Online_Shopping.Controllers
         {
             if(ModelState.IsValid)
             {
-                bool value = accountService.Login(loginViewModel);
+                bool value = accountService.Login(loginViewModel.Username, loginViewModel.Password);
                 if(value)
                 {
                     FormsAuthentication.SetAuthCookie(loginViewModel.Username, false);
@@ -155,25 +157,36 @@ namespace Online_Shopping.Controllers
         {
             try
             {
-                Session["Email"] = EmailId;
-                    int min = 1000;
-                    int max = 9999;
-                    Random rdm = new Random();
-                    Session["otp"] = rdm.Next(min, max);
-                MailMessage mailMessage = new MailMessage("sriharish467764@gmail.com", EmailId);
-                mailMessage.Subject = "Forgot Password";
-                mailMessage.Body = Convert.ToString(Session["otp"]);
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new System.Net.NetworkCredential()
+                bool value = accountService.ExistingEmailSignUp(EmailId);
+                if (value)
                 {
-                    UserName = "sriharish467764@gmail.com",
-                    Password = "Harishsri@26"
-                };
-                smtpClient.EnableSsl = true;
-                smtpClient.Send(mailMessage);
+                    Guid guid = Guid.NewGuid();
+                    accountService.UpdateUser(EmailId,Convert.ToString(guid));
+                    //Session["Email"] = EmailId;
+                    //Random rdm = new Random();
+                    //Session["otp"] = rdm.Next(1000, 9999);
+                    string senderEmail = ConfigurationManager.AppSettings["SenderEmail"];
+                    string senderPassword = ConfigurationManager.AppSettings["SenderPassword"];
+                    MailMessage mailMessage = new MailMessage(senderEmail, EmailId);
+                    mailMessage.Subject = "Forgot Password";
+                    // mailMessage.Body = Convert.ToString(Session["otp"]);
+                    mailMessage.Body = "https://localhost:44321/Account/NewPassword/" + guid.ToString();
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                    //{
+                    //    UserName = Username,
+                    //    Password = Password
+                    //};
+                    smtpClient.EnableSsl = true;
+                    smtpClient.Send(mailMessage);
+                }
+                else
+                {
 
-                return Redirect("Code");
+                }
+                //return Redirect("Code");
+                return View();
             }
             catch
             {
@@ -200,10 +213,19 @@ namespace Online_Shopping.Controllers
             }
         }
 
-        public ActionResult NewPassword()
+        public ActionResult NewPassword(string id)
         {
-            NewPasswordViewModel newPasswordViewModel = accountService.NewPassword(Convert.ToString(Session["Email"]));
-            return View(newPasswordViewModel);
+            // NewPasswordViewModel newPasswordViewModel = accountService.NewPassword(Convert.ToString(Session["Email"]));
+            NewPasswordViewModel newPasswordViewModel = accountService.Newpassword(id);
+            if(newPasswordViewModel != null)
+            {
+                return View(newPasswordViewModel);
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+           // return View(newPasswordViewModel);
         }
 
         [HttpPost]
@@ -212,7 +234,7 @@ namespace Online_Shopping.Controllers
             if (ModelState.IsValid)
             {
                 accountService.NewPassword(newPasswordViewModel);
-                return Redirect("Login");
+                return RedirectToAction("Login");
             }
             else
             {

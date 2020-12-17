@@ -48,7 +48,7 @@ namespace Online_Shopping.ServiceLayer
             }
         }
 
-        public string GetUsername(int OrderId)
+        public string GetUsernameEmail(int OrderId)
         {
             OrderDetail orderDetail = adminRepository.GetOrderDetail(OrderId);
             User user = adminRepository.GetUserDetail(orderDetail.UserId);

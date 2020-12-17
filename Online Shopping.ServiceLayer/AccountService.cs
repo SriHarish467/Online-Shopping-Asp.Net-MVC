@@ -10,37 +10,27 @@ namespace Online_Shopping.ServiceLayer
     {
         AccountRepository accountRepository = new AccountRepository();
 
-        public User Mapping(UserViewModel userViewModel)
+        public bool ExistingUserSignUp(string Username)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserViewModel, User>());
-            var mapper = new Mapper(config);
-            User user = mapper.Map<UserViewModel, User>(userViewModel);
-            return user;
-        }
-        public bool ExistingUserSignUp(UserViewModel userViewModel)
-        {
-            User user = Mapping(userViewModel);
-            return accountRepository.ExistingUserSignUp(user);
+            return accountRepository.ExistingUserSignUp(Username);
         }
 
-        public bool ExistingEmailSignUp(UserViewModel userViewModel)
+        public bool ExistingEmailSignUp(string EmailId)
         {
-            User user = Mapping(userViewModel);
-            return accountRepository.ExistingEmailSignUp(user);
+            return accountRepository.ExistingEmailSignUp(EmailId);
         }
 
         public void NewUserSignUp(UserViewModel userViewModel)
         {
-            User user = Mapping(userViewModel);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<UserViewModel, User>());
+            var mapper = new Mapper(config);
+            User user = mapper.Map<UserViewModel, User>(userViewModel);
             accountRepository.NewUserSignUp(user);
         }
 
-        public bool Login(LoginViewModel loginViewModel)
+        public bool Login(string Username,string Password)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<LoginViewModel, User>());
-            var mapper = new Mapper(config);
-            User user = mapper.Map<LoginViewModel, User>(loginViewModel);
-            return accountRepository.Login(user);
+            return accountRepository.Login(Username, Password);
         }
 
         public UpdateUserProfileViewModel UpdateProfile(string name)
@@ -85,12 +75,26 @@ namespace Online_Shopping.ServiceLayer
             return newPasswordViewModel;
         }
 
+        public NewPasswordViewModel Newpassword(string id)
+        {
+            User user = accountRepository.Newpassword(id);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<User, NewPasswordViewModel>());
+            var mapper = new Mapper(config);
+            NewPasswordViewModel newPasswordViewModel = mapper.Map<NewPasswordViewModel>(user);
+            return newPasswordViewModel;
+        }
+
         public void NewPassword(NewPasswordViewModel newPasswordViewModel)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<NewPasswordViewModel, User>());
             var mapper = new Mapper(config);
             User user = mapper.Map<User>(newPasswordViewModel);
             accountRepository.UpdateProfile(user);
+        }
+
+        public void UpdateUser(string EmailId,string guid)
+        {
+            accountRepository.UpdateUser(EmailId,guid);
         }
     }
 }

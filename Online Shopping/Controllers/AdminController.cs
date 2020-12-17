@@ -2,6 +2,7 @@
 using Online_Shopping.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net.Mail;
 using System.Web.Mvc;
 
@@ -54,7 +55,7 @@ namespace Online_Shopping.Controllers
         public JsonResult SendMailToUser(int OrderId)
         {
             bool result = false;
-            string Email = adminService.GetUsername(OrderId);
+            string Email = adminService.GetUsernameEmail(OrderId);
             result = SendEmail(Email);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -63,16 +64,14 @@ namespace Online_Shopping.Controllers
         {
             try
             {
-                MailMessage mailMessage = new MailMessage("sriharish467764@gmail.com","sriharish467764@gmail.com");
-                mailMessage.Subject = "Testing";
+                string senderEmail = ConfigurationManager.AppSettings["SenderEmail"];
+                string senderPassword = ConfigurationManager.AppSettings["SenderPassword"];
+                MailMessage mailMessage = new MailMessage(senderEmail, Email);
+                mailMessage.Subject = "Order Placed";
                 mailMessage.Body = "Your OrderId 1";
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new System.Net.NetworkCredential()
-                {
-                    UserName = "sriharish467764@gmail.com",
-                    Password = "Harishsri@26"
-                };
+                smtpClient.Credentials = new System.Net.NetworkCredential(senderEmail, senderPassword);
                 smtpClient.EnableSsl = true;
                 smtpClient.Send(mailMessage);
 

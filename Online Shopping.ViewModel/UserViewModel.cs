@@ -22,7 +22,8 @@ namespace Online_Shopping.ViewModel
         [Compare("Password")]
         [DisplayName("Confirm Password")]
         public string ConfirmPassword { get; set; }
-
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
         public int RoleId { get; set; }
         public Role Role { get; set; }
     }

@@ -8,14 +8,14 @@ namespace Online_Shopping.Repository
     {
         ShoppingDbContext shoppingDbContext = new ShoppingDbContext();
 
-        public bool ExistingUserSignUp(User user)
+        public bool ExistingUserSignUp(string Username)
         {
-            return shoppingDbContext.Users.Any(x => x.Username == user.Username);
+            return shoppingDbContext.Users.Any(x => x.Username == Username);
         }
 
-        public bool ExistingEmailSignUp(User user)
+        public bool ExistingEmailSignUp(string EmailId)
         {
-            return shoppingDbContext.Users.Any(x => x.EmailId == user.EmailId);
+            return shoppingDbContext.Users.Any(x => x.EmailId == EmailId);
         }
 
         public void NewUserSignUp(User user)
@@ -25,9 +25,9 @@ namespace Online_Shopping.Repository
             shoppingDbContext.SaveChanges();
         }
 
-        public bool Login(User user)
+        public bool Login(string Username,string Password)
         {
-            return shoppingDbContext.Users.Any(x => x.Username == user.Username && x.Password == user.Password);
+            return shoppingDbContext.Users.Any(x => x.Username == Username && x.Password == Password);
         }
 
         public User UpdateProfile(string name)
@@ -44,6 +44,17 @@ namespace Online_Shopping.Repository
         public User NewPassword(string Email)
         {
             return shoppingDbContext.Users.Single(x => x.EmailId == Email);
+        }
+        public User Newpassword(string id)
+        {
+            return shoppingDbContext.Users.Single(x => x.ResetCode == id);
+        }
+
+        public void UpdateUser(string EmailId,string guid)
+        {
+            User user = shoppingDbContext.Users.Single(x => x.EmailId == EmailId);
+            user.ResetCode = guid;
+            shoppingDbContext.SaveChanges();
         }
     }
 }
